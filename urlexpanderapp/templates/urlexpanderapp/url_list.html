@@ -1,0 +1,20 @@
+{% extends 'urlexpanderapp/base.html' %}
+{% block content %}
+
+<form action="{% url 'url_new' %}" method="POST">
+	{% csrf_token %}
+	<label for="input"> Shortened URL: </label>
+	<input id="input" type="text" name="shorturl">
+	<input type="submit" value="submit">
+</form>
+
+	{% for url in urls %}
+		<div>
+			<h4><a href="{%  url 'url_detail' url.pk  %}">{{ url.title  }}</a></h4>
+			<br></br>
+			<p>{{ url.status }}</p>
+			<p>{{ url.url_long }}</p>
+			<p>Original Link: {{ url.url_short }}</p>
+		</div>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'urlexpanderapp/base.html' %}
+
+{% block content %}
+	<div>
+		{% if url.title %}
+			<h1> {{ url.title }} </h1>
+		{% endif %}
+		{% if url.url_long %}
+			<div>
+				{{ url.url_long }}
+			</div>
+		{% endif %}
+		<p> {{ url.url_short }} </p>
+		<br></br>
+		<a href="{% url 'url_delete' url.id %}">Remove</a>
+	</div>
+{% endblock %}
