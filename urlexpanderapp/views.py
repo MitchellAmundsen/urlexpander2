@@ -1,14 +1,18 @@
-from urllib.request import urlopen
+#from urllib.request import urlopen
 from django.shortcuts import render, get_object_or_404
 from .models import URL
 from .forms import URLForm
 from bs4 import BeautifulSoup
-import requests
+import requests, json
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 
+@login_required(login_url='/login', redirect_field_name='url_list')
 def url_list(request):
 	urls = URL.objects.all()
 	return render(request, 'urlexpanderapp/url_list.html', {'urls' : urls})
 
+@login_required(login_url='/login')
 def url_detail(request, url_pk):
 	current = get_object_or_404(URL, pk=url_pk)
 	return render(request, 'urlexpanderapp/url_detail.html', {'url' : current})
@@ -32,6 +36,7 @@ def urlexpander(request, address):
 	return render(request, 'urlexpanderapp/url_new.html', {'urls': url})
 '''
 
+@login_required(login_url='/login')
 def url_add(request):
 	shorturl = request.POST['shorturl']
 	page = requests.get(shorturl)
@@ -44,13 +49,24 @@ def url_add(request):
 		url.title = "None"
 	url.url_short = shorturl
 	url.url_long = page.url
+
+	wayback = 'http://archive.org/wayback/available?url=' + shorturl
+	wayget = requests.get(wayback)
+	data = json.loads(wayget.text)
+	archive = data['archived_snapshots']['closest']
+	url.snapshot = archive['url']
+	url.recent = archive['timestamp']	
+
 	url.save()
 	return render(request, 'urlexpanderapp/url_detail.html', {'url' : url})
 
+@login_required(login_url='/login')
 def url_delete(request, url_pk):
 	current = get_object_or_404(URL, pk=url_pk)
 	current.delete()
 	urls = URL.objects.all()
 	return render(request, 'urlexpanderapp/url_list.html', {'urls' : urls})
 
+def login(request):
+	return render(request, 'registration/login.html')
 

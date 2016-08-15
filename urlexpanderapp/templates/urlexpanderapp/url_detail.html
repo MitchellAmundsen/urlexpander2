@@ -3,7 +3,7 @@
 {% block content %}
 	<div>
 		{% if url.title %}
-			<h1> {{ url.title }} </h1>
+			<a href="{% url 'url_list'}"> {{ url.title }} </a>
 		{% endif %}
 		{% if url.url_long %}
 			<div>
@@ -11,6 +11,8 @@
 			</div>
 		{% endif %}
 		<p> {{ url.url_short }} </p>
+		<p> Wayback: {{ url.snapshot }}</p>
+		<p> Wayback time: {{ url.recent }} </p>
 		<br></br>
 		<a href="{% url 'url_delete' url.id %}">Remove</a>
 	</div>

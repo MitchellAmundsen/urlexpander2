@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+	<title>Registration</title>
+</head>
+
+<body>
+	<h2>Registration</h2>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{% for field in form %}
+			<div class="form-group">
+				<h4> {{ field.error }}</h4>
+				<label> {{ field.label_tag }} </label>
+				<div> {{ field }} </div>
+			</div>
+		{% endfor %}
+		<button type="submit">Register</button>
+	</form>
+</body>
