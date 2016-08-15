@@ -7,12 +7,12 @@ import requests, json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 
-@login_required(login_url='/login', redirect_field_name='url_list')
+@login_required(login_url='/urlexpander2/login', redirect_field_name='url_list')
 def url_list(request):
 	urls = URL.objects.all()
 	return render(request, 'urlexpanderapp/url_list.html', {'urls' : urls})
 
-@login_required(login_url='/login')
+@login_required(login_url='/urlexpander2/login')
 def url_detail(request, url_pk):
 	current = get_object_or_404(URL, pk=url_pk)
 	return render(request, 'urlexpanderapp/url_detail.html', {'url' : current})
@@ -36,7 +36,7 @@ def urlexpander(request, address):
 	return render(request, 'urlexpanderapp/url_new.html', {'urls': url})
 '''
 
-@login_required(login_url='/login')
+@login_required(login_url='/urlexpander2/login')
 def url_add(request):
 	shorturl = request.POST['shorturl']
 	page = requests.get(shorturl)
@@ -60,7 +60,7 @@ def url_add(request):
 	url.save()
 	return render(request, 'urlexpanderapp/url_detail.html', {'url' : url})
 
-@login_required(login_url='/login')
+@login_required(login_url='/urlexpander/login')
 def url_delete(request, url_pk):
 	current = get_object_or_404(URL, pk=url_pk)
 	current.delete()
